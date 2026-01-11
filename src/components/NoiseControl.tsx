@@ -1,29 +1,27 @@
 import { motion } from "framer-motion";
-import { Headphones, Wind, Volume2 } from "lucide-react";
+import { Headphones, Volume2 } from "lucide-react";
 
 interface NoiseControlProps {
   intensity: number; // 0-1
 }
 
 const NoiseControl = ({ intensity }: NoiseControlProps) => {
-  // ANC level inversely proportional to speed (less when running fast for safety)
-  const ancLevel = Math.round((1 - intensity * 0.7) * 100);
-  // Ambient sound increases with speed
-  const ambientLevel = Math.round(intensity * 60);
-  
+  // ANC level proportional to speed - higher pace = more noise cancellation
+  const ancLevel = Math.round(30 + intensity * 70);
+
   const getANCMode = () => {
     if (ancLevel > 80) return "Full ANC";
-    if (ancLevel > 50) return "Moderate ANC";
-    if (ancLevel > 20) return "Light ANC";
-    return "Ambient Focus";
+    if (ancLevel > 60) return "High ANC";
+    if (ancLevel > 40) return "Moderate ANC";
+    return "Light ANC";
   };
-  
+
   return (
-    <div className="bg-card rounded-2xl p-4">
-      <div className="flex items-center justify-between mb-3">
+    <div className="bg-card rounded-2xl p-4 border border-border/50">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Headphones className="w-4 h-4 text-primary" />
-          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
             Noise Control
           </span>
         </div>
@@ -36,51 +34,32 @@ const NoiseControl = ({ intensity }: NoiseControlProps) => {
           {getANCMode()}
         </motion.span>
       </div>
-      
-      <div className="space-y-3">
-        {/* ANC Level */}
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-            <Volume2 className="w-4 h-4 text-primary" />
-          </div>
-          <div className="flex-1">
-            <div className="flex justify-between text-xs mb-1">
-              <span className="text-muted-foreground">Active NC</span>
-              <span className="font-medium text-foreground">{ancLevel}%</span>
-            </div>
-            <div className="h-1.5 bg-muted rounded-full overflow-hidden">
-              <motion.div
-                className="h-full rounded-full bg-primary"
-                animate={{ width: `${ancLevel}%` }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-              />
-            </div>
-          </div>
+
+      {/* Single ANC Level Bar */}
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+          <Volume2 className="w-5 h-5 text-primary" />
         </div>
-        
-        {/* Ambient Level */}
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
-            <Wind className="w-4 h-4 text-muted-foreground" />
+        <div className="flex-1">
+          <div className="flex justify-between text-xs mb-1.5">
+            <span className="text-muted-foreground">Active Noise Cancellation</span>
+            <span className="font-semibold text-foreground tabular-nums">{ancLevel}%</span>
           </div>
-          <div className="flex-1">
-            <div className="flex justify-between text-xs mb-1">
-              <span className="text-muted-foreground">Ambient Sound</span>
-              <span className="font-medium text-foreground">{ambientLevel}%</span>
-            </div>
-            <div className="h-1.5 bg-muted rounded-full overflow-hidden">
-              <motion.div
-                className="h-full rounded-full bg-muted-foreground/50"
-                animate={{ width: `${ambientLevel}%` }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-              />
-            </div>
+          <div className="h-2 bg-muted rounded-full overflow-hidden">
+            <motion.div
+              className="h-full rounded-full"
+              style={{
+                background: "linear-gradient(90deg, hsl(var(--primary) / 0.6), hsl(var(--primary)))",
+              }}
+              animate={{ width: `${ancLevel}%` }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            />
           </div>
         </div>
       </div>
-      
-      <p className="text-[10px] text-muted-foreground mt-3 text-center">
-        Auto-adjusts based on your pace for safety
+
+      <p className="text-[10px] text-muted-foreground/70 mt-3 text-center">
+        Higher pace = more noise isolation for focus
       </p>
     </div>
   );

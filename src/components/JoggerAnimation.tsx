@@ -10,33 +10,34 @@ const JoggerAnimation = ({ speed }: JoggerAnimationProps) => {
   
   return (
     <div className="relative w-full h-52 flex items-center justify-center overflow-hidden">
-      {/* Illustrated Runner SVG */}
+      {/* Side Profile Runner SVG */}
       <motion.svg
-        width="120"
+        width="140"
         height="190"
-        viewBox="0 0 120 190"
+        viewBox="0 0 140 190"
         className="relative z-10"
       >
-        {/* Hair */}
+        {/* Hair - Side profile */}
         <ellipse
-          cx="60"
+          cx="55"
           cy="28"
-          rx="16"
+          rx="18"
           ry="18"
           fill="hsl(0 0% 50%)"
         />
-        {/* Ponytail */}
+        
+        {/* Ponytail flowing behind */}
         <motion.path
-          d="M72 22 C85 20 90 35 82 48"
+          d="M40 25 C20 22 10 35 15 50"
           stroke="hsl(0 0% 50%)"
           strokeWidth="10"
           strokeLinecap="round"
           fill="none"
           animate={isActive ? {
             d: [
-              "M72 22 C85 20 90 35 82 48",
-              "M72 22 C90 18 95 30 88 42",
-              "M72 22 C85 20 90 35 82 48",
+              "M40 25 C20 22 10 35 15 50",
+              "M40 25 C15 18 2 28 8 45",
+              "M40 25 C20 22 10 35 15 50",
             ],
           } : {}}
           transition={{
@@ -46,34 +47,51 @@ const JoggerAnimation = ({ speed }: JoggerAnimationProps) => {
           }}
         />
         
-        {/* Head/Face */}
+        {/* Head/Face - Side profile */}
         <ellipse
-          cx="60"
+          cx="58"
           cy="35"
-          rx="14"
+          rx="12"
           ry="16"
           fill="hsl(25 55% 55%)"
         />
         
+        {/* Nose */}
+        <ellipse
+          cx="70"
+          cy="36"
+          rx="3"
+          ry="2"
+          fill="hsl(25 50% 50%)"
+        />
+        
         {/* Ear */}
-        <ellipse cx="46" cy="35" r="3.5" fill="hsl(25 45% 50%)" />
+        <ellipse cx="48" cy="35" rx="3" fill="hsl(25 45% 50%)" ry="4" />
         
-        {/* Earbud */}
-        <circle cx="45" cy="35" r="4" fill="hsl(0 0% 90%)" />
-        <circle cx="45" cy="35" r="2" fill="hsl(0 0% 75%)" />
+        {/* Earbud in ear */}
+        <circle cx="48" cy="35" r="3.5" fill="hsl(0 0% 90%)" />
+        <circle cx="48" cy="35" r="1.5" fill="hsl(0 0% 75%)" />
         
-        {/* Neck */}
-        <rect x="54" y="49" width="12" height="10" rx="2" fill="hsl(25 55% 55%)" />
+        {/* Neck - angled forward for running posture */}
+        <motion.rect 
+          x="54" 
+          y="49" 
+          width="10" 
+          height="12" 
+          rx="2" 
+          fill="hsl(25 55% 55%)"
+          style={{ transform: 'rotate(-10deg)', transformOrigin: '60px 55px' }}
+        />
         
-        {/* Torso - White shirt */}
+        {/* Torso - White shirt, leaning forward */}
         <motion.path
-          d="M42 58 L78 58 L82 105 L38 105 Z"
+          d="M45 58 L75 56 L80 105 L40 107 Z"
           fill="hsl(0 0% 90%)"
           animate={isActive ? {
             d: [
-              "M42 58 L78 58 L82 105 L38 105 Z",
-              "M40 56 L80 56 L84 103 L36 103 Z",
-              "M42 58 L78 58 L82 105 L38 105 Z",
+              "M45 58 L75 56 L80 105 L40 107 Z",
+              "M43 56 L77 54 L82 103 L38 105 Z",
+              "M45 58 L75 56 L80 105 L40 107 Z",
             ],
           } : {}}
           transition={{
@@ -83,20 +101,20 @@ const JoggerAnimation = ({ speed }: JoggerAnimationProps) => {
           }}
         />
         
-        {/* Left Arm */}
+        {/* Back Arm (behind body) */}
         <motion.g>
           <motion.line
-            x1="44"
+            x1="48"
             y1="62"
-            x2="28"
-            y2="78"
+            x2="72"
+            y2="85"
             stroke="hsl(25 55% 55%)"
-            strokeWidth="12"
+            strokeWidth="11"
             strokeLinecap="round"
             animate={isActive ? {
-              x2: [28, 70, 28],
-              y2: [78, 75, 78],
-            } : { x2: 35, y2: 82 }}
+              x2: [72, 30, 72],
+              y2: [85, 78, 85],
+            } : { x2: 55, y2: 90 }}
             transition={{
               duration: animationDuration,
               repeat: isActive ? Infinity : 0,
@@ -104,19 +122,19 @@ const JoggerAnimation = ({ speed }: JoggerAnimationProps) => {
             }}
           />
           <motion.line
-            x1="28"
-            y1="78"
-            x2="32"
-            y2="62"
+            x1="72"
+            y1="85"
+            x2="65"
+            y2="70"
             stroke="hsl(25 55% 55%)"
-            strokeWidth="10"
+            strokeWidth="9"
             strokeLinecap="round"
             animate={isActive ? {
-              x1: [28, 70, 28],
-              y1: [78, 75, 78],
-              x2: [32, 58, 32],
-              y2: [62, 62, 62],
-            } : { x1: 35, y1: 82, x2: 30, y2: 95 }}
+              x1: [72, 30, 72],
+              y1: [85, 78, 85],
+              x2: [65, 48, 65],
+              y2: [70, 62, 70],
+            } : { x1: 55, y1: 90, x2: 50, y2: 100 }}
             transition={{
               duration: animationDuration,
               repeat: isActive ? Infinity : 0,
@@ -125,20 +143,20 @@ const JoggerAnimation = ({ speed }: JoggerAnimationProps) => {
           />
         </motion.g>
         
-        {/* Right Arm */}
+        {/* Front Arm */}
         <motion.g>
           <motion.line
-            x1="76"
+            x1="55"
             y1="62"
-            x2="92"
+            x2="30"
             y2="78"
             stroke="hsl(25 55% 55%)"
             strokeWidth="12"
             strokeLinecap="round"
             animate={isActive ? {
-              x2: [92, 50, 92],
-              y2: [78, 75, 78],
-            } : { x2: 85, y2: 82 }}
+              x2: [30, 85, 30],
+              y2: [78, 82, 78],
+            } : { x2: 45, y2: 85 }}
             transition={{
               duration: animationDuration,
               repeat: isActive ? Infinity : 0,
@@ -146,19 +164,19 @@ const JoggerAnimation = ({ speed }: JoggerAnimationProps) => {
             }}
           />
           <motion.line
-            x1="92"
+            x1="30"
             y1="78"
-            x2="88"
-            y2="62"
+            x2="45"
+            y2="60"
             stroke="hsl(25 55% 55%)"
             strokeWidth="10"
             strokeLinecap="round"
             animate={isActive ? {
-              x1: [92, 50, 92],
-              y1: [78, 75, 78],
-              x2: [88, 62, 88],
-              y2: [62, 62, 62],
-            } : { x1: 85, y1: 82, x2: 90, y2: 95 }}
+              x1: [30, 85, 30],
+              y1: [78, 82, 78],
+              x2: [45, 72, 45],
+              y2: [60, 65, 60],
+            } : { x1: 45, y1: 85, x2: 38, y2: 95 }}
             transition={{
               duration: animationDuration,
               repeat: isActive ? Infinity : 0,
@@ -169,13 +187,13 @@ const JoggerAnimation = ({ speed }: JoggerAnimationProps) => {
         
         {/* Shorts - Dark */}
         <motion.path
-          d="M40 102 L80 102 L78 128 L62 128 L60 118 L58 128 L42 128 Z"
+          d="M42 102 L78 100 L82 128 L65 130 L60 120 L55 130 L38 128 Z"
           fill="hsl(0 0% 22%)"
           animate={isActive ? {
             d: [
-              "M40 102 L80 102 L78 128 L62 128 L60 118 L58 128 L42 128 Z",
-              "M38 100 L82 100 L80 126 L64 126 L60 116 L56 126 L40 126 Z",
-              "M40 102 L80 102 L78 128 L62 128 L60 118 L58 128 L42 128 Z",
+              "M42 102 L78 100 L82 128 L65 130 L60 120 L55 130 L38 128 Z",
+              "M40 100 L80 98 L84 126 L67 128 L60 118 L53 128 L36 126 Z",
+              "M42 102 L78 100 L82 128 L65 130 L60 120 L55 130 L38 128 Z",
             ],
           } : {}}
           transition={{
@@ -185,20 +203,20 @@ const JoggerAnimation = ({ speed }: JoggerAnimationProps) => {
           }}
         />
         
-        {/* Left Leg */}
+        {/* Back Leg */}
         <motion.g>
           <motion.line
-            x1="52"
+            x1="55"
             y1="125"
-            x2="45"
-            y2="155"
+            x2="25"
+            y2="150"
             stroke="hsl(25 55% 55%)"
-            strokeWidth="16"
+            strokeWidth="15"
             strokeLinecap="round"
             animate={isActive ? {
-              x2: [38, 72, 38],
-              y2: [152, 148, 152],
-            } : { x2: 48, y2: 158 }}
+              x2: [25, 90, 25],
+              y2: [150, 145, 150],
+            } : { x2: 45, y2: 158 }}
             transition={{
               duration: animationDuration,
               repeat: isActive ? Infinity : 0,
@@ -206,19 +224,19 @@ const JoggerAnimation = ({ speed }: JoggerAnimationProps) => {
             }}
           />
           <motion.line
-            x1="45"
-            y1="155"
-            x2="44"
+            x1="25"
+            y1="150"
+            x2="35"
             y2="178"
             stroke="hsl(25 55% 55%)"
-            strokeWidth="13"
+            strokeWidth="12"
             strokeLinecap="round"
             animate={isActive ? {
-              x1: [38, 72, 38],
-              y1: [152, 148, 152],
-              x2: [35, 88, 35],
-              y2: [178, 172, 178],
-            } : { x1: 48, y1: 158, x2: 47, y2: 180 }}
+              x1: [25, 90, 25],
+              y1: [150, 145, 150],
+              x2: [35, 75, 35],
+              y2: [178, 175, 178],
+            } : { x1: 45, y1: 158, x2: 42, y2: 180 }}
             transition={{
               duration: animationDuration,
               repeat: isActive ? Infinity : 0,
@@ -226,15 +244,15 @@ const JoggerAnimation = ({ speed }: JoggerAnimationProps) => {
             }}
           />
           <motion.ellipse
-            cx="44"
-            cy="182"
-            rx="12"
-            ry="6"
+            cx="38"
+            cy="181"
+            rx="14"
+            ry="5"
             fill="hsl(0 0% 18%)"
             animate={isActive ? {
-              cx: [35, 88, 35],
-              cy: [182, 176, 182],
-            } : { cx: 47, cy: 184 }}
+              cx: [38, 78, 38],
+              cy: [181, 178, 181],
+            } : { cx: 42, cy: 183 }}
             transition={{
               duration: animationDuration,
               repeat: isActive ? Infinity : 0,
@@ -243,19 +261,19 @@ const JoggerAnimation = ({ speed }: JoggerAnimationProps) => {
           />
         </motion.g>
         
-        {/* Right Leg */}
+        {/* Front Leg */}
         <motion.g>
           <motion.line
-            x1="68"
+            x1="65"
             y1="125"
-            x2="75"
-            y2="155"
+            x2="95"
+            y2="148"
             stroke="hsl(25 55% 55%)"
             strokeWidth="16"
             strokeLinecap="round"
             animate={isActive ? {
-              x2: [82, 48, 82],
-              y2: [152, 148, 152],
+              x2: [95, 30, 95],
+              y2: [148, 152, 148],
             } : { x2: 72, y2: 158 }}
             transition={{
               duration: animationDuration,
@@ -264,19 +282,19 @@ const JoggerAnimation = ({ speed }: JoggerAnimationProps) => {
             }}
           />
           <motion.line
-            x1="75"
-            y1="155"
-            x2="76"
-            y2="178"
+            x1="95"
+            y1="148"
+            x2="110"
+            y2="176"
             stroke="hsl(25 55% 55%)"
             strokeWidth="13"
             strokeLinecap="round"
             animate={isActive ? {
-              x1: [82, 48, 82],
-              y1: [152, 148, 152],
-              x2: [85, 32, 85],
-              y2: [178, 172, 178],
-            } : { x1: 72, y1: 158, x2: 73, y2: 180 }}
+              x1: [95, 30, 95],
+              y1: [148, 152, 148],
+              x2: [110, 22, 110],
+              y2: [176, 178, 176],
+            } : { x1: 72, y1: 158, x2: 74, y2: 180 }}
             transition={{
               duration: animationDuration,
               repeat: isActive ? Infinity : 0,
@@ -284,15 +302,15 @@ const JoggerAnimation = ({ speed }: JoggerAnimationProps) => {
             }}
           />
           <motion.ellipse
-            cx="76"
-            cy="182"
-            rx="12"
-            ry="6"
+            cx="113"
+            cy="180"
+            rx="14"
+            ry="5"
             fill="hsl(0 0% 18%)"
             animate={isActive ? {
-              cx: [85, 32, 85],
-              cy: [182, 176, 182],
-            } : { cx: 73, cy: 184 }}
+              cx: [113, 22, 113],
+              cy: [180, 181, 180],
+            } : { cx: 74, cy: 183 }}
             transition={{
               duration: animationDuration,
               repeat: isActive ? Infinity : 0,

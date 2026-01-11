@@ -6,7 +6,7 @@ import MusicPlayer from "@/components/MusicPlayer";
 import NoiseControl from "@/components/NoiseControl";
 import SpeedSlider from "@/components/SpeedSlider";
 import BottomNav from "@/components/BottomNav";
-import { ChevronRight, Play } from "lucide-react";
+import { ChevronRight, Play, Zap } from "lucide-react";
 
 const Index = () => {
   const [speed, setSpeed] = useState(0.5);
@@ -26,9 +26,9 @@ const Index = () => {
         className="relative w-[375px] h-[812px] rounded-[50px] overflow-hidden bg-background"
         style={{
           boxShadow: `
-            0 0 0 12px hsl(0 0% 12%),
-            0 0 0 14px hsl(0 0% 8%),
-            0 25px 50px -12px rgba(0, 0, 0, 0.5)
+            0 0 0 12px hsl(0 0% 10%),
+            0 0 0 14px hsl(0 0% 6%),
+            0 30px 60px -15px rgba(0, 0, 0, 0.6)
           `,
         }}
         initial={{ opacity: 0, scale: 0.9 }}
@@ -43,10 +43,10 @@ const Index = () => {
         {/* Screen Content */}
         <div className="h-full pt-14 pb-0 flex flex-col">
           {/* Main scrollable content */}
-          <div className="flex-1 overflow-y-auto px-4 pb-20 space-y-3">
+          <div className="flex-1 overflow-y-auto px-4 pb-20 space-y-4">
             {/* Jogger Animation - Main Hero */}
             <motion.div
-              className="flex justify-center py-4"
+              className="flex justify-center py-2"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
@@ -56,7 +56,7 @@ const Index = () => {
 
             {/* BPM Display - Compact */}
             <motion.div
-              className="flex justify-center mb-4"
+              className="flex justify-center"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
@@ -66,7 +66,6 @@ const Index = () => {
 
             {/* Speed Slider */}
             <motion.div
-              className="mb-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
@@ -76,38 +75,42 @@ const Index = () => {
 
             {/* Feature Cards Grid */}
             <motion.div
-              className="grid grid-cols-2 gap-3 mb-4"
+              className="grid grid-cols-2 gap-3"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
             >
               {/* Running Card - Active */}
-              <div className="bg-card rounded-2xl p-4 relative overflow-hidden">
-                <div className="flex items-center justify-between mb-1">
+              <div className="bg-card rounded-2xl p-4 border border-border/50">
+                <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-foreground">Running</span>
                   <ChevronRight className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <div className="w-4 h-4 rounded-full bg-primary flex items-center justify-center">
-                    <Play className="w-2 h-2 text-primary-foreground fill-current" />
+                  <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                    <Play className="w-2.5 h-2.5 text-primary-foreground fill-current" />
                   </div>
-                  <span className="text-xs text-primary">Active</span>
+                  <span className="text-xs font-medium text-primary">Active</span>
                 </div>
               </div>
 
               {/* Adaptive Sound Card */}
-              <div className="bg-card rounded-2xl p-4">
-                <div className="flex items-center justify-between mb-1">
+              <div className="bg-card rounded-2xl p-4 border border-border/50">
+                <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-foreground">Sound</span>
                   <ChevronRight className="w-4 h-4 text-muted-foreground" />
                 </div>
-                <span className="text-xs text-muted-foreground">Adaptive</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center">
+                    <Zap className="w-2.5 h-2.5 text-accent" />
+                  </div>
+                  <span className="text-xs font-medium text-muted-foreground">Adaptive</span>
+                </div>
               </div>
             </motion.div>
 
             {/* Noise Control */}
             <motion.div
-              className="mb-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
@@ -134,7 +137,7 @@ const Index = () => {
 
           {/* Home Indicator */}
           <div className="flex justify-center pb-2">
-            <div className="w-32 h-1 bg-foreground/30 rounded-full" />
+            <div className="w-32 h-1 bg-foreground/20 rounded-full" />
           </div>
         </div>
       </motion.div>

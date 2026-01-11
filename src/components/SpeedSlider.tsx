@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Footprints } from "lucide-react";
+import { Activity, GripVertical } from "lucide-react";
 
 interface SpeedSliderProps {
   speed: number;
@@ -7,64 +7,76 @@ interface SpeedSliderProps {
 }
 
 const SpeedSlider = ({ speed, onSpeedChange }: SpeedSliderProps) => {
-  const stepsPerMinute = Math.round(80 + speed * 120);
-  
+  // Standardized to BPM (same as music) - range 80-180 BPM
+  const bpm = Math.round(80 + speed * 100);
+
   return (
-    <div className="w-full px-2">
-      <div className="flex items-center justify-between mb-2">
+    <div className="w-full">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Footprints className="w-4 h-4 text-primary" />
-          <span className="text-xs font-medium text-muted-foreground">
-            Simulate Step Rate
+          <Activity className="w-4 h-4 text-primary" />
+          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+            Simulated Pace
           </span>
         </div>
-        <motion.span
-          className="text-xs font-bold text-foreground"
-          key={stepsPerMinute}
-          initial={{ scale: 1.2, color: "hsl(var(--primary))" }}
-          animate={{ scale: 1, color: "hsl(var(--foreground))" }}
+        <motion.div
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20"
+          key={bpm}
+          initial={{ scale: 1.05 }}
+          animate={{ scale: 1 }}
         >
-          {stepsPerMinute} spm
-        </motion.span>
+          <span className="text-sm font-bold text-primary tabular-nums">{bpm}</span>
+          <span className="text-[10px] font-medium text-primary/70">BPM</span>
+        </motion.div>
       </div>
-      
-      <div className="relative">
+
+      {/* Single unified slider bar */}
+      <div className="relative h-12 bg-card rounded-xl overflow-hidden border border-border/50">
+        {/* Track fill background */}
+        <motion.div
+          className="absolute top-0 left-0 h-full"
+          style={{
+            background: "linear-gradient(90deg, hsl(var(--primary) / 0.2), hsl(var(--primary) / 0.4))",
+          }}
+          animate={{ width: `${speed * 100}%` }}
+          transition={{ duration: 0.1, ease: "easeOut" }}
+        />
+
+        {/* Slider input */}
         <input
           type="range"
           min="0"
           max="100"
           value={speed * 100}
           onChange={(e) => onSpeedChange(Number(e.target.value) / 100)}
-          className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer
-            [&::-webkit-slider-thumb]:appearance-none
-            [&::-webkit-slider-thumb]:w-5
-            [&::-webkit-slider-thumb]:h-5
-            [&::-webkit-slider-thumb]:rounded-full
-            [&::-webkit-slider-thumb]:bg-gradient-to-br
-            [&::-webkit-slider-thumb]:from-primary
-            [&::-webkit-slider-thumb]:to-sony-amber
-            [&::-webkit-slider-thumb]:shadow-lg
-            [&::-webkit-slider-thumb]:shadow-primary/30
-            [&::-webkit-slider-thumb]:cursor-grab
-            [&::-webkit-slider-thumb]:active:cursor-grabbing
-            [&::-webkit-slider-thumb]:transition-transform
-            [&::-webkit-slider-thumb]:hover:scale-110"
+          className="absolute inset-0 w-full h-full opacity-0 cursor-grab active:cursor-grabbing z-20"
         />
-        
-        {/* Track fill */}
-        <div
-          className="absolute top-0 left-0 h-2 rounded-full pointer-events-none"
+
+        {/* Draggable handle indicator */}
+        <motion.div
+          className="absolute top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 shadow-lg pointer-events-none z-10"
           style={{
-            width: `${speed * 100}%`,
-            background: "var(--gradient-primary)",
+            left: `calc(${Math.max(5, Math.min(95, speed * 100))}% - 20px)`,
           }}
-        />
+          animate={{
+            left: `calc(${Math.max(5, Math.min(95, speed * 100))}% - 20px)`,
+          }}
+          transition={{ duration: 0.1, ease: "easeOut" }}
+        >
+          <GripVertical className="w-5 h-5 text-white/90" />
+        </motion.div>
+
+        {/* Labels inside the bar */}
+        <div className="absolute inset-0 flex items-center justify-between px-4 pointer-events-none">
+          <span className="text-xs font-medium text-muted-foreground/60">Walk</span>
+          <span className="text-xs font-medium text-muted-foreground/60">Sprint</span>
+        </div>
       </div>
-      
-      <div className="flex justify-between mt-1">
-        <span className="text-[10px] text-muted-foreground">Walk</span>
-        <span className="text-[10px] text-muted-foreground">Sprint</span>
-      </div>
+
+      {/* Hint text */}
+      <p className="text-[10px] text-muted-foreground/70 mt-2 text-center">
+        Drag to simulate your running pace
+      </p>
     </div>
   );
 };
