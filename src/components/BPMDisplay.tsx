@@ -6,38 +6,24 @@ interface BPMDisplayProps {
 }
 
 const BPMDisplay = ({ bpm, intensity }: BPMDisplayProps) => {
-  const pulseSpeed = Math.max(0.3, 1 - intensity * 0.7);
+  const pulseSpeed = Math.max(0.4, 1.2 - intensity * 0.8);
   
   return (
-    <div className="relative flex flex-col items-center justify-center">
-      {/* Glow rings */}
+    <div className="relative flex flex-col items-center justify-center py-2">
+      {/* Subtle glow */}
       <motion.div
-        className="absolute w-48 h-48 rounded-full"
+        className="absolute w-24 h-24 rounded-full"
         style={{
-          background: `radial-gradient(circle, hsl(32 100% 50% / ${0.15 + intensity * 0.15}), transparent 70%)`,
+          background: `radial-gradient(circle, hsl(var(--primary) / ${0.1 + intensity * 0.1}), transparent 70%)`,
         }}
         animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.5, 0.8, 0.5],
+          scale: [1, 1.15, 1],
+          opacity: [0.4, 0.7, 0.4],
         }}
         transition={{
           duration: pulseSpeed,
           repeat: Infinity,
           ease: "easeInOut",
-        }}
-      />
-      
-      <motion.div
-        className="absolute w-36 h-36 rounded-full border border-primary/30"
-        animate={{
-          scale: [1, 1.1, 1],
-          opacity: [0.3, 0.6, 0.3],
-        }}
-        transition={{
-          duration: pulseSpeed,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 0.1,
         }}
       />
       
@@ -45,7 +31,7 @@ const BPMDisplay = ({ bpm, intensity }: BPMDisplayProps) => {
       <motion.div
         className="relative z-10 flex flex-col items-center"
         animate={{
-          scale: [1, 1 + intensity * 0.05, 1],
+          scale: [1, 1 + intensity * 0.02, 1],
         }}
         transition={{
           duration: pulseSpeed,
@@ -53,20 +39,17 @@ const BPMDisplay = ({ bpm, intensity }: BPMDisplayProps) => {
           ease: "easeInOut",
         }}
       >
-        <span className="text-xs font-medium text-muted-foreground uppercase tracking-[0.3em] mb-1">
-          BPM
-        </span>
         <motion.span
-          className="text-7xl font-black glow-text text-gradient tabular-nums"
+          className="text-5xl font-bold text-foreground tabular-nums"
           key={bpm}
-          initial={{ opacity: 0.8, scale: 0.95 }}
+          initial={{ opacity: 0.8, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: 0.15 }}
         >
           {bpm}
         </motion.span>
-        <span className="text-xs font-medium text-muted-foreground mt-1">
-          beats per minute
+        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+          BPM
         </span>
       </motion.div>
     </div>

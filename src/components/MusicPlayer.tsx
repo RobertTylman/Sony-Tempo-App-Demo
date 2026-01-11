@@ -22,7 +22,7 @@ const MusicPlayer = ({ bpm, isPlaying, onTogglePlay }: MusicPlayerProps) => {
   const track = getTrackInfo();
   
   return (
-    <div className="w-full glass-panel p-4">
+    <div className="w-full bg-card rounded-2xl p-4">
       {/* Track Info */}
       <div className="flex items-center gap-4 mb-4">
         <motion.div
