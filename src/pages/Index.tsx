@@ -13,11 +13,16 @@ const Index = () => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [bpm, setBpm] = useState(140);
 
-  // BPM adjusts based on speed (80-180 BPM range)
+  // BPM adjusts based on speed (60-180 BPM range)
   useEffect(() => {
-    const targetBpm = Math.round(80 + speed * 100);
+    const targetBpm = Math.round(60 + speed * 120);
     setBpm(targetBpm);
   }, [speed]);
+
+  // Calculate pulse animation based on BPM
+  const pulseDuration = 60 / bpm; // Time for one beat in seconds
+  // Very subtle pulse - max 3% lightness variation
+  const pulseIntensity = Math.min(0.03, speed * 0.03);
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -35,24 +40,42 @@ const Index = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
+        {/* Pulsing background */}
+        <motion.div
+          className="absolute inset-0 bg-background"
+          animate={{
+            backgroundColor: [
+              `hsl(0 0% 7%)`,
+              // Subtle pulse: slight tint of green/purple and lightness increase
+              `hsl(142 ${10 + speed * 15}% ${7 + pulseIntensity * 100}%)`,
+              `hsl(0 0% 7%)`,
+            ],
+          }}
+          transition={{
+            duration: pulseDuration,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
         {/* Status Bar */}
-        <div className="absolute top-0 left-0 right-0 h-12 flex items-center justify-center z-20">
+        <div className="absolute top-0 left-0 right-0 h-10 flex items-center justify-center z-20">
           <div className="w-28 h-7 bg-black rounded-b-2xl" />
         </div>
 
-        {/* Sony Logo - Top Left, locked position */}
-        <div className="absolute top-14 left-5 z-20">
-          <img
-            src="/sony logo.svg"
-            alt="Sony"
-            className="w-24 h-auto invert opacity-90"
-          />
-        </div>
-
         {/* Screen Content */}
-        <div className="h-full pt-14 pb-0 flex flex-col">
+        <div className="relative z-10 h-full pt-0 pb-0 flex flex-col">
           {/* Main scrollable content */}
-          <div className="flex-1 overflow-y-auto px-4 pb-20 space-y-4">
+          <div className="flex-1 overflow-y-auto px-4 pt-6 pb-20 space-y-4">
+            {/* Sony Logo */}
+            <div className="pl-2">
+              <img
+                src="/sony logo.svg"
+                alt="Sony"
+                className="w-24 h-auto invert opacity-90"
+              />
+            </div>
+
             {/* Jogger Animation - Main Hero */}
             <motion.div
               className="flex justify-center py-2"

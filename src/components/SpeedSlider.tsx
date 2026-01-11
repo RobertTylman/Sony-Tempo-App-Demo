@@ -19,15 +19,6 @@ const SpeedSlider = ({ speed, onSpeedChange }: SpeedSliderProps) => {
             Simulated Pace
           </span>
         </div>
-        <motion.div
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20"
-          key={bpm}
-          initial={{ scale: 1.05 }}
-          animate={{ scale: 1 }}
-        >
-          <span className="text-sm font-bold text-primary tabular-nums">{bpm}</span>
-          <span className="text-[10px] font-medium text-primary/70">BPM</span>
-        </motion.div>
       </div>
 
       {/* Single unified slider bar */}
@@ -67,7 +58,7 @@ const SpeedSlider = ({ speed, onSpeedChange }: SpeedSliderProps) => {
         {/* Labels inside the bar */}
         <div className="absolute inset-0 flex items-center justify-between px-4 pointer-events-none">
           <span className="text-xs font-medium text-muted-foreground/60">Walk</span>
-          <span className="text-xs font-medium text-muted-foreground/60">Sprint</span>
+          <span className="text-xs font-medium text-muted-foreground/60">Run</span>
         </div>
       </div>
 

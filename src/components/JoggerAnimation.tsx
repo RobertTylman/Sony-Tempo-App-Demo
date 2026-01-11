@@ -5,20 +5,71 @@ interface JoggerAnimationProps {
 }
 
 const JoggerAnimation = ({ speed }: JoggerAnimationProps) => {
-  // Make it run faster: Range from 0.8s (jog) down to 0.28s (sprint)
-  const animationDuration = Math.max(0.28, 0.8 - speed * 0.52);
-  const isActive = speed > 0.05;
+  // Speed mapping: Higher speed = Lower duration
+  // Range: 1.2s (slow jog) down to 0.5s (fast run)
+  const animationDuration = Math.max(0.5, 1.2 - speed * 0.8);
 
-  // Dynamic stride multiplier: as speed increases, limbs reach further
-  const stride = 1 + speed * 0.25;
+  // Stride length multiplier
+  const s = 1 + speed * 0.5;
+
+  // Joint coordinates logic
+  // Hip center approx: (80, 95)
+  // We define the cycle points for the RIGHT side limbs. 
+  // LEFT side will use the same points but shifted phase in the array.
+
+  // LEG CYCLES (Rotary motion)
+  // 1. Contact (Front land)
+  const legContact = `M80 95 L${95 + 10 * s} 110 L${110 + 10 * s} 135`;
+  // 2. Down (Support/Compress)
+  const legDown = `M80 97 L${90} 120 L${85} 140`;
+  // 3. Kick (Push back)
+  const legKick = `M80 95 L${55 - 10 * s} 115 L${30 - 20 * s} 110`;
+  // 4. Fold (Recover/Fold)
+  const legFold = `M80 95 L${65} 110 L${55} 125`;
+  // 5. Up (High Knee Drive)
+  const legUp = `M80 95 L${100 + 10 * s} 90 L${95 + 10 * s} 115`;
+
+  // Full Leg Cycle Loops
+  const rightLegCycle = [legContact, legDown, legKick, legFold, legUp, legContact];
+  const leftLegCycle = [legKick, legFold, legUp, legContact, legDown, legKick]; // Offset by ~50%
+
+  // ARM CYCLES (Opposite to legs)
+  // Shoulder center approx: (88, 55)
+  // 1. Back (When leg is Forward)
+  const armBack = `M88 55 L${65 - 10 * s} 65 L${50 - 15 * s} 55`;
+  // 2. Mid Back
+  const armMidBack = `M88 55 L${75} 70 L${65} 65`;
+  // 3. Forward (When leg is Back)
+  const armForward = `M88 55 L${105 + 10 * s} 60 L${120 + 15 * s} 45`;
+  // 4. Mid Forward
+  const armMidForward = `M88 55 L${95} 65 L${105} 55`;
+
+  // Full Arm Cycle Loops
+  // Right Arm (Opposite to Right Leg -> So matches Left Leg phase, i.e., starts Forward)
+  const rightArmCycle = [armBack, armMidBack, armForward, armMidForward, armBack, armBack];
+  // Note: Right arm should be BACK when Right leg is FORWARD.
+  // Let's correct phases:
+  // Right Leg starts at CONTACT (Forward). So Right Arm should be BACK.
+  const rightArmSequence = [armBack, armMidBack, armForward, armMidForward, armBack];
+  const leftArmSequence = [armForward, armMidForward, armBack, armMidBack, armForward];
+
+
+  // Common style props
+  const silhouetteProps = {
+    stroke: "url(#runnerGradient)",
+    strokeWidth: "16",
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    fill: "none",
+    style: { filter: "url(#glow)" }
+  };
 
   return (
     <div className="relative w-full h-48 flex items-center justify-center overflow-hidden">
-      {/* Simple Stick Figure Runner - Matching reference */}
       <motion.svg
-        width="120"
-        height="160"
-        viewBox="0 0 120 160"
+        width="180"
+        height="180"
+        viewBox="0 0 180 180" // Wider viewbox
         className="relative z-10"
       >
         <defs>
@@ -35,38 +86,54 @@ const JoggerAnimation = ({ speed }: JoggerAnimationProps) => {
           </filter>
         </defs>
 
-        {/* Head - Large round head like reference */}
+        {/* --- BACK LAYER --- */}
+
+        {/* Left Arm (Phase: Forward -> Back) */}
+        <motion.path
+          {...silhouetteProps}
+          strokeWidth="14" // Slightly smaller for depth
+          style={{ ...silhouetteProps.style, opacity: 0.85 }}
+          animate={{ d: leftArmSequence }}
+          transition={{
+            duration: animationDuration,
+            repeat: Infinity,
+            ease: "linear", // Linear for continuous loop
+            times: [0, 0.25, 0.5, 0.75, 1]
+          }}
+        />
+
+        {/* Left Leg (Phase: Push -> Contact) */}
+        <motion.path
+          {...silhouetteProps}
+          strokeWidth="15"
+          style={{ ...silhouetteProps.style, opacity: 0.85 }}
+          animate={{ d: leftLegCycle }}
+          transition={{
+            duration: animationDuration,
+            repeat: Infinity,
+            ease: "linear",
+            times: [0, 0.2, 0.4, 0.6, 0.8, 1]
+          }}
+        />
+
+        {/* --- BODY LAYER --- */}
+
+        {/* Head */}
+        <motion.path
+          d="M85 45 L88 55" // Neck
+          {...silhouetteProps}
+          strokeWidth="16"
+        />
         <motion.circle
-          cx="65"
-          cy="22"
+          cx="86"
+          cy="32"
           r="14"
           fill="url(#runnerGradient)"
           style={{ filter: "url(#glow)" }}
-          animate={isActive ? {
-            y: [0, -2, 0],
-            x: [0, 1, 0]
-          } : {}}
-          transition={{
-            duration: animationDuration / 2,
-            repeat: Infinity,
-            ease: "easeInOut"
+          animate={{
+            y: [0, 1.5, 0, 1.5, 0], // Bobbing twice per cycle (left step, right step)
+            x: [0, 0.5, 0, 0.5, 0]
           }}
-        />
-
-        {/* Body/Torso - Simple thin line, slight lean */}
-        <motion.path
-          d="M62 38 L55 75"
-          stroke="url(#runnerGradient)"
-          strokeWidth="5"
-          strokeLinecap="round"
-          style={{ filter: "url(#glow)" }}
-          animate={isActive ? {
-            d: [
-              "M60 38 L56 75",
-              "M64 38 L54 75",
-              "M60 38 L56 75"
-            ]
-          } : {}}
           transition={{
             duration: animationDuration,
             repeat: Infinity,
@@ -74,110 +141,68 @@ const JoggerAnimation = ({ speed }: JoggerAnimationProps) => {
           }}
         />
 
-        {/* Back Arm - Thin stick arm */}
+        {/* Torso */}
         <motion.path
-          d="M60 45 L40 55 L30 45"
-          stroke="url(#runnerGradient)"
-          strokeWidth="4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-          style={{ opacity: 0.7, filter: "url(#glow)" }}
-          animate={isActive ? {
+          d="M88 50 C 92 65, 82 85, 80 95" // Spine
+          {...silhouetteProps}
+          strokeWidth="20"
+          animate={{
+            // Subtle torsion/bounce
             d: [
-              `M60 45 L${35 - 8 * stride} 58 L${25 - 10 * stride} 48`,
-              `M60 45 L${80 + 5 * stride} 52 L${90 + 8 * stride} 40`,
-              `M60 45 L${35 - 8 * stride} 58 L${25 - 10 * stride} 48`
+              "M88 50 C 92 65, 82 85, 80 95",
+              "M89 51 C 93 66, 83 86, 81 96",
+              "M88 50 C 92 65, 82 85, 80 95",
+              "M89 51 C 93 66, 83 86, 81 96",
+              "M88 50 C 92 65, 82 85, 80 95"
             ]
-          } : { d: "M60 45 L50 60 L55 70" }}
+          }}
           transition={{
             duration: animationDuration,
-            repeat: isActive ? Infinity : 0,
+            repeat: Infinity,
             ease: "easeInOut"
           }}
         />
 
-        {/* Front Arm - Thin stick arm */}
+        {/* --- FRONT LAYER --- */}
+
+        {/* Right Leg (Phase: Contact -> Push) */}
         <motion.path
-          d="M60 45 L80 52 L90 40"
-          stroke="url(#runnerGradient)"
-          strokeWidth="4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-          style={{ filter: "url(#glow)" }}
-          animate={isActive ? {
-            d: [
-              `M60 45 L${80 + 5 * stride} 52 L${90 + 8 * stride} 40`,
-              `M60 45 L${35 - 8 * stride} 58 L${25 - 10 * stride} 48`,
-              `M60 45 L${80 + 5 * stride} 52 L${90 + 8 * stride} 40`
-            ]
-          } : { d: "M60 45 L70 60 L65 70" }}
+          {...silhouetteProps}
+          animate={{ d: rightLegCycle }}
           transition={{
             duration: animationDuration,
-            repeat: isActive ? Infinity : 0,
-            ease: "easeInOut"
+            repeat: Infinity,
+            ease: "linear",
+            times: [0, 0.2, 0.4, 0.6, 0.8, 1]
           }}
         />
 
-        {/* Back Leg - Thin stick leg */}
+        {/* Right Arm (Phase: Back -> Forward) */}
         <motion.path
-          d="M55 75 L35 100 L20 95"
-          stroke="url(#runnerGradient)"
-          strokeWidth="5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-          style={{ opacity: 0.7, filter: "url(#glow)" }}
-          animate={isActive ? {
-            d: [
-              `M55 75 L${30 - 12 * stride} 100 L${15 - 18 * stride} 90`,
-              `M55 75 L${75 + 8 * stride} 105 L${85 + 15 * stride} 130`,
-              `M55 75 L${30 - 12 * stride} 100 L${15 - 18 * stride} 90`
-            ]
-          } : { d: "M55 75 L50 115 L55 130" }}
+          {...silhouetteProps}
+          strokeWidth="14"
+          animate={{ d: rightArmSequence }}
           transition={{
             duration: animationDuration,
-            repeat: isActive ? Infinity : 0,
-            ease: "easeInOut"
+            repeat: Infinity,
+            ease: "linear",
+            times: [0, 0.25, 0.5, 0.75, 1]
           }}
         />
 
-        {/* Front Leg - Thin stick leg */}
-        <motion.path
-          d="M55 75 L75 105 L85 130"
-          stroke="url(#runnerGradient)"
-          strokeWidth="5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-          style={{ filter: "url(#glow)" }}
-          animate={isActive ? {
-            d: [
-              `M55 75 L${75 + 8 * stride} 105 L${85 + 15 * stride} 130`,
-              `M55 75 L${30 - 12 * stride} 100 L${15 - 18 * stride} 90`,
-              `M55 75 L${75 + 8 * stride} 105 L${85 + 15 * stride} 130`
-            ]
-          } : { d: "M55 75 L60 115 L55 130" }}
-          transition={{
-            duration: animationDuration,
-            repeat: isActive ? Infinity : 0,
-            ease: "easeInOut"
-          }}
-        />
       </motion.svg>
 
       {/* Shadow */}
       <motion.div
-        className="absolute bottom-6 w-16 h-2 bg-black/30 rounded-full blur-md"
-        animate={isActive ? {
-          scaleX: [1, 1.3, 1],
-          opacity: [0.3, 0.5, 0.3],
-        } : {}}
+        className="absolute bottom-6 w-24 h-3 bg-black/40 rounded-full blur-md"
+        animate={{
+          scaleX: [0.95, 1.05, 0.95, 1.05, 0.95],
+          opacity: [0.3, 0.4, 0.3, 0.4, 0.3],
+        }}
         transition={{
           duration: animationDuration,
           repeat: Infinity,
-          ease: "easeInOut"
+          ease: "linear"
         }}
       />
     </div>
