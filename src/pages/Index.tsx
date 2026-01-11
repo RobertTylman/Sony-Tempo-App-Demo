@@ -40,6 +40,15 @@ const Index = () => {
           <div className="w-28 h-7 bg-black rounded-b-2xl" />
         </div>
 
+        {/* Sony Logo - Top Left, locked position */}
+        <div className="absolute top-14 left-5 z-20">
+          <img
+            src="/sony logo.svg"
+            alt="Sony"
+            className="w-24 h-auto invert opacity-90"
+          />
+        </div>
+
         {/* Screen Content */}
         <div className="h-full pt-14 pb-0 flex flex-col">
           {/* Main scrollable content */}

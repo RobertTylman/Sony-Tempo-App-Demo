@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Activity, GripVertical } from "lucide-react";
+import { Activity } from "lucide-react";
 
 interface SpeedSliderProps {
   speed: number;
@@ -52,19 +52,17 @@ const SpeedSlider = ({ speed, onSpeedChange }: SpeedSliderProps) => {
           className="absolute inset-0 w-full h-full opacity-0 cursor-grab active:cursor-grabbing z-20"
         />
 
-        {/* Draggable handle indicator */}
+        {/* Draggable handle indicator - flush vertical bar */}
         <motion.div
-          className="absolute top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 shadow-lg pointer-events-none z-10"
+          className="absolute top-0 h-full w-1 bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.5)] pointer-events-none z-10"
           style={{
-            left: `calc(${Math.max(5, Math.min(95, speed * 100))}% - 20px)`,
+            left: `${speed * 100}%`,
           }}
           animate={{
-            left: `calc(${Math.max(5, Math.min(95, speed * 100))}% - 20px)`,
+            left: `${speed * 100}%`,
           }}
           transition={{ duration: 0.1, ease: "easeOut" }}
-        >
-          <GripVertical className="w-5 h-5 text-white/90" />
-        </motion.div>
+        />
 
         {/* Labels inside the bar */}
         <div className="absolute inset-0 flex items-center justify-between px-4 pointer-events-none">
