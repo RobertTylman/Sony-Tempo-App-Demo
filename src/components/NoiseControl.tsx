@@ -19,7 +19,7 @@ const NoiseControl = ({ intensity }: NoiseControlProps) => {
   };
   
   return (
-    <div className="glass-panel p-4">
+    <div className="bg-card rounded-2xl p-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <Headphones className="w-4 h-4 text-primary" />
