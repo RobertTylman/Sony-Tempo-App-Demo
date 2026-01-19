@@ -28,7 +28,7 @@ const Index = () => {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       {/* iPhone Frame */}
       <motion.div
-        className="relative w-[375px] h-[812px] rounded-[50px] overflow-hidden bg-background"
+        className="relative w-[375px] h-[812px] rounded-[50px] overflow-hidden bg-background cursor-none [&_*]:!cursor-none"
         style={{
           boxShadow: `
             0 0 0 12px hsl(0 0% 10%),
@@ -64,7 +64,7 @@ const Index = () => {
         </div>
 
         {/* Sony Logo - Absolute Top Left (Next to notch) */}
-        <div className="absolute top-3 left-6 z-30 pointer-events-none">
+        <div className="absolute top-[0px] left-7 z-30 pointer-events-none">
           <img
             src="/sony logo.svg"
             alt="Sony"
@@ -92,7 +92,7 @@ const Index = () => {
 
             {/* BPM Display - Compact */}
             <motion.div
-              className="flex justify-center -mt-4"
+              className="flex justify-center -mt-12"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}

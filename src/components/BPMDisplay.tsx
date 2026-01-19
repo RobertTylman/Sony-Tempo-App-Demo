@@ -9,7 +9,7 @@ const BPMDisplay = ({ bpm, intensity }: BPMDisplayProps) => {
   const pulseSpeed = Math.max(0.4, 1.2 - intensity * 0.8);
 
   return (
-    <div className="relative flex flex-col items-center justify-center py-3">
+    <div className="relative flex flex-col items-center justify-center">
       {/* Subtle glow */}
       <motion.div
         className="absolute w-28 h-28 rounded-full"

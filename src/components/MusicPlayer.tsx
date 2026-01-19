@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Play, Pause, SkipBack, SkipForward } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward, Infinity as InfinityIcon } from "lucide-react";
 import { useState } from "react";
 
 interface MusicPlayerProps {
@@ -43,8 +43,8 @@ const MusicPlayer = ({ bpm, isPlaying, onTogglePlay }: MusicPlayerProps) => {
         <button
           onClick={() => setActiveSource('spotify')}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${activeSource === 'spotify'
-              ? 'bg-[#1DB954]/20 text-[#1DB954] border border-[#1DB954]/30'
-              : 'bg-muted/50 text-muted-foreground hover:bg-muted'
+            ? 'bg-[#1DB954]/20 text-[#1DB954] border border-[#1DB954]/30'
+            : 'bg-muted/50 text-muted-foreground hover:bg-muted'
             }`}
         >
           <SpotifyLogo className="w-4 h-4" />
@@ -53,8 +53,8 @@ const MusicPlayer = ({ bpm, isPlaying, onTogglePlay }: MusicPlayerProps) => {
         <button
           onClick={() => setActiveSource('apple')}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${activeSource === 'apple'
-              ? 'bg-[#FC3C44]/20 text-[#FC3C44] border border-[#FC3C44]/30'
-              : 'bg-muted/50 text-muted-foreground hover:bg-muted'
+            ? 'bg-[#FC3C44]/20 text-[#FC3C44] border border-[#FC3C44]/30'
+            : 'bg-muted/50 text-muted-foreground hover:bg-muted'
             }`}
         >
           <AppleMusicLogo className="w-4 h-4" />
@@ -66,8 +66,8 @@ const MusicPlayer = ({ bpm, isPlaying, onTogglePlay }: MusicPlayerProps) => {
       <div className="flex items-center gap-4 mb-4">
         <motion.div
           className={`w-14 h-14 rounded-xl flex items-center justify-center ${activeSource === 'spotify'
-              ? 'bg-gradient-to-br from-[#1DB954] to-[#1ed760]'
-              : 'bg-gradient-to-br from-[#FC3C44] to-[#ff6b6b]'
+            ? 'bg-gradient-to-br from-[#1DB954] to-[#1ed760]'
+            : 'bg-gradient-to-br from-[#FC3C44] to-[#ff6b6b]'
             }`}
           animate={isPlaying ? {
             scale: [1, 1.03, 1],
@@ -111,7 +111,7 @@ const MusicPlayer = ({ bpm, isPlaying, onTogglePlay }: MusicPlayerProps) => {
       </div>
 
       {/* Progress Bar */}
-      <div className="mb-4">
+      <div className="mb-2">
         <div className="h-1.5 bg-muted rounded-full overflow-hidden">
           <motion.div
             className="h-full rounded-full"
@@ -132,12 +132,20 @@ const MusicPlayer = ({ bpm, isPlaying, onTogglePlay }: MusicPlayerProps) => {
         </div>
         <div className="flex justify-between mt-1.5">
           <span className="text-[10px] text-muted-foreground tabular-nums">1:24</span>
+
+          {/* DJ Mix Indicator */}
+          <div className={`flex items-center gap-1 text-[10px] font-medium ${activeSource === 'spotify' ? 'text-[#1DB954]' : 'text-[#FC3C44]'
+            }`}>
+            <InfinityIcon className="w-3 h-3" />
+            <span>Seamless Mix Active</span>
+          </div>
+
           <span className="text-[10px] text-muted-foreground tabular-nums">4:02</span>
         </div>
       </div>
 
       {/* Controls */}
-      <div className="flex items-center justify-center gap-8">
+      <div className="flex items-center justify-center gap-8 mt-2">
         <motion.button
           className="p-2 text-muted-foreground hover:text-foreground transition-colors"
           whileTap={{ scale: 0.9 }}
@@ -147,8 +155,8 @@ const MusicPlayer = ({ bpm, isPlaying, onTogglePlay }: MusicPlayerProps) => {
 
         <motion.button
           className={`w-14 h-14 rounded-full flex items-center justify-center ${activeSource === 'spotify'
-              ? 'bg-gradient-to-br from-[#1DB954] to-[#1ed760]'
-              : 'bg-gradient-to-br from-[#FC3C44] to-[#ff6b6b]'
+            ? 'bg-gradient-to-br from-[#1DB954] to-[#1ed760]'
+            : 'bg-gradient-to-br from-[#FC3C44] to-[#ff6b6b]'
             }`}
           whileTap={{ scale: 0.95 }}
           onClick={onTogglePlay}
