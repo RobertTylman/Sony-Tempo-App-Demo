@@ -85,9 +85,16 @@ const JoggerAnimation = ({ speed }: JoggerAnimationProps) => {
   // Returns [ShoulderX, ShoulderY, ElbowX, ElbowY, HandX, HandY]
   const getArmPoints = (s: number) => {
     return {
-      back: [88, 55, 60 - 5 * s, 65, 45 - 10 * s, 50],
-      mid: [88, 55, 80, 75, 80, 85],
-      forward: [88, 55, 115 + 5 * s, 65, 125 + 10 * s, 45]
+      // Back drive: Elbow drives back, hand stays near waistband
+      // More compact: Elbow (55, 65), Hand (75, 80)
+      back: [88, 55, 55 - 5 * s, 65, 75 - 5 * s, 80],
+
+      // Mid: Elbow passing side
+      mid: [88, 55, 85, 75, 95, 80],
+
+      // Forward drive: "Hip to Lip". Elbow stays near ribs, hand comes up.
+      // Elbow shouldn't go too far forward.
+      forward: [88, 55, 95 + 5 * s, 70, 115 + 10 * s, 45]
     };
   };
 
@@ -229,7 +236,7 @@ const JoggerAnimation = ({ speed }: JoggerAnimationProps) => {
         {/* Left Arm */}
         <motion.path
           {...silhouetteProps}
-          strokeWidth="14"
+          strokeWidth="11"
           style={{ ...silhouetteProps.style, opacity: 0.85 }}
           d={leftArmPath}
         />
@@ -274,7 +281,7 @@ const JoggerAnimation = ({ speed }: JoggerAnimationProps) => {
         {/* Right Arm */}
         <motion.path
           {...silhouetteProps}
-          strokeWidth="14"
+          strokeWidth="11"
           d={rightArmPath}
         />
 

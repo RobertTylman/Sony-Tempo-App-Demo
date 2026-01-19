@@ -82,7 +82,7 @@ const Index = () => {
 
             {/* Jogger Animation - Main Hero */}
             <motion.div
-              className="flex justify-center py-2"
+              className="flex justify-center"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
@@ -92,7 +92,7 @@ const Index = () => {
 
             {/* BPM Display - Compact */}
             <motion.div
-              className="flex justify-center"
+              className="flex justify-center -mt-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
