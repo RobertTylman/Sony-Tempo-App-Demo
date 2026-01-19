@@ -63,18 +63,22 @@ const Index = () => {
           <div className="w-28 h-7 bg-black rounded-b-2xl" />
         </div>
 
+        {/* Sony Logo - Absolute Top Left (Next to notch) */}
+        <div className="absolute top-3 left-6 z-30 pointer-events-none">
+          <img
+            src="/sony logo.svg"
+            alt="Sony"
+            className="w-20 h-auto invert opacity-90"
+          />
+        </div>
+
         {/* Screen Content */}
         <div className="relative z-10 h-full pt-0 pb-0 flex flex-col">
           {/* Main scrollable content */}
-          <div className="flex-1 overflow-y-auto px-4 pt-6 pb-20 space-y-4">
-            {/* Sony Logo */}
-            <div className="pl-2">
-              <img
-                src="/sony logo.svg"
-                alt="Sony"
-                className="w-24 h-auto invert opacity-90"
-              />
-            </div>
+          <div className="flex-1 overflow-y-auto px-4 pt-4 pb-20 space-y-4">
+
+            {/* Spacer to push runner down */}
+            <div className="h-16" />
 
             {/* Jogger Animation - Main Hero */}
             <motion.div
