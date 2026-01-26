@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import BPMDisplay from "@/components/BPMDisplay";
 import JoggerAnimation from "@/components/JoggerAnimation";
@@ -12,6 +12,7 @@ const Index = () => {
   const [speed, setSpeed] = useState(0.5);
   const [isPlaying, setIsPlaying] = useState(true);
   const [bpm, setBpm] = useState(140);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // BPM adjusts based on speed (60-180 BPM range)
   useEffect(() => {
@@ -19,13 +20,129 @@ const Index = () => {
     setBpm(targetBpm);
   }, [speed]);
 
+  // Demo automation - scrolls and adjusts slider for presentation
+  const runDemoSequence = useCallback(() => {
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) return;
+
+    const SCROLL_DURATION = 3000; // ms for each scroll direction
+    const SLIDER_DURATION = 4000; // ms for each slider direction
+    const PAUSE_BETWEEN = 1000; // ms pause between actions
+
+    // Helper: Smooth scroll animation
+    const smoothScroll = (
+      element: HTMLElement,
+      targetScroll: number,
+      duration: number
+    ): Promise<void> => {
+      return new Promise((resolve) => {
+        const startScroll = element.scrollTop;
+        const distance = targetScroll - startScroll;
+        const startTime = performance.now();
+
+        const animateScroll = (currentTime: number) => {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          // Ease in-out cubic
+          const easeProgress =
+            progress < 0.5
+              ? 4 * progress * progress * progress
+              : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+          element.scrollTop = startScroll + distance * easeProgress;
+
+          if (progress < 1) {
+            requestAnimationFrame(animateScroll);
+          } else {
+            resolve();
+          }
+        };
+        requestAnimationFrame(animateScroll);
+      });
+    };
+
+    // Helper: Smooth slider animation
+    const smoothSlider = (
+      startValue: number,
+      endValue: number,
+      duration: number,
+      setValue: (v: number) => void
+    ): Promise<void> => {
+      return new Promise((resolve) => {
+        const startTime = performance.now();
+        const distance = endValue - startValue;
+
+        const animateSlider = (currentTime: number) => {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          // Ease in-out cubic
+          const easeProgress =
+            progress < 0.5
+              ? 4 * progress * progress * progress
+              : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+          setValue(startValue + distance * easeProgress);
+
+          if (progress < 1) {
+            requestAnimationFrame(animateSlider);
+          } else {
+            resolve();
+          }
+        };
+        requestAnimationFrame(animateSlider);
+      });
+    };
+
+    // Helper: Delay/pause
+    const delay = (ms: number): Promise<void> =>
+      new Promise((resolve) => setTimeout(resolve, ms));
+
+    // Run the demo sequence
+    const runSequence = async () => {
+      while (true) {
+        const maxScroll = scrollContainer.scrollHeight - scrollContainer.clientHeight;
+
+        // 1. Scroll down slowly
+        await smoothScroll(scrollContainer, maxScroll, SCROLL_DURATION);
+        await delay(PAUSE_BETWEEN);
+
+        // 2. Increase tempo to near max (while at bottom)
+        await smoothSlider(0.5, 0.9, SLIDER_DURATION, setSpeed);
+        await delay(PAUSE_BETWEEN);
+
+        // 3. Scroll back up
+        await smoothScroll(scrollContainer, 0, SCROLL_DURATION);
+        await delay(PAUSE_BETWEEN);
+
+        // 4. Decrease tempo to ~78 BPM
+        await smoothSlider(0.9, 0.15, SLIDER_DURATION, setSpeed);
+        await delay(PAUSE_BETWEEN);
+
+        // 5. Reset to middle and pause before next cycle
+        await smoothSlider(0.15, 0.5, SLIDER_DURATION / 2, setSpeed);
+        await delay(PAUSE_BETWEEN * 2);
+      }
+    };
+
+    runSequence();
+  }, []);
+
+  // Start demo automation after component mounts
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      runDemoSequence();
+    }, 2000); // 2 second delay before starting
+
+    return () => clearTimeout(timer);
+  }, [runDemoSequence]);
+
   // Calculate pulse animation based on BPM
   const pulseDuration = 60 / bpm; // Time for one beat in seconds
-  // Very subtle pulse - max 3% lightness variation
-  const pulseIntensity = Math.min(0.03, speed * 0.03);
+  // Very subtle pulse - max 1% lightness variation
+  const pulseIntensity = Math.min(0.01, speed * 0.01);
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className="min-h-screen bg-black flex items-center justify-center p-4">
       {/* iPhone Frame */}
       <motion.div
         className="relative w-[375px] h-[812px] rounded-[50px] overflow-hidden bg-background cursor-none [&_*]:!cursor-none"
@@ -46,8 +163,8 @@ const Index = () => {
           animate={{
             backgroundColor: [
               `hsl(0 0% 7%)`,
-              // Subtle pulse: slight tint of green/purple and lightness increase
-              `hsl(142 ${10 + speed * 15}% ${7 + pulseIntensity * 100}%)`,
+              // Very subtle pulse: minimal tint and lightness change
+              `hsl(142 ${3 + speed * 5}% ${7 + pulseIntensity * 100}%)`,
               `hsl(0 0% 7%)`,
             ],
           }}
@@ -75,7 +192,7 @@ const Index = () => {
         {/* Screen Content */}
         <div className="relative z-10 h-full pt-0 pb-0 flex flex-col">
           {/* Main scrollable content */}
-          <div className="flex-1 overflow-y-auto px-4 pt-4 pb-20 space-y-4">
+          <div ref={scrollContainerRef} className="flex-1 overflow-y-auto px-4 pt-4 pb-20 space-y-4">
 
             {/* Spacer to push runner down */}
             <div className="h-16" />
